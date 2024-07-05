@@ -9,7 +9,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from urllib.error import HTTPError
 
-from core import fetch_accounts, add_account
+from core import fetch_accounts, add_account, update_account
 
 app = Flask(__name__, static_folder='static')
 csrf = CSRFProtect(app)
@@ -122,6 +122,35 @@ def details():
             return _render_error_template(HTTPStatus.BAD_REQUEST, 'Invalid value received in list of account IDs.\nPlease ensure IDs are integer values. Multiple values must be comma separated.')
     else:
         return _render_error_template(HTTPStatus.BAD_REQUEST, 'You must include at least one account id or comma separated mutiple IDs. (E.g. - 1,2,3)')
+
+
+@app.route('/edit', methods=['POST'])
+@csrf.exempt
+def edit():
+    values = request.values
+    try:
+        account_id = values['account_id']
+        account_type = values['account_type']
+        account_number = values['account_number']
+        depositor_1 = values['depositor_1']
+        depositor_2 = values['depositor_2']
+        try:
+            if values['amount']:
+                amount = int(values['amount'])
+            else:
+                amount = None
+        except ValueError:
+            return _render_error_template(HTTPStatus.BAD_REQUEST, 'Invalid value found for amount. Please ensure it is integer value.')
+
+        maturity_date = values['maturity_date']
+        agent = values['agent']
+        update_account(account_id, account_number, account_type, depositor_1, depositor_2, amount, maturity_date, agent)
+        return redirect(url_for('details', account_ids=account_id))
+    except KeyError:
+        return _render_error_template(HTTPStatus.BAD_REQUEST, 'Please fill the required fields.')
+    except ValueError as ve:
+        return _render_error_template(HTTPStatus.BAD_REQUEST, ve.args[0])
+
 
 
 def _render_error_template(category: HTTPStatus, message: str):

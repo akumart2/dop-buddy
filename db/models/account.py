@@ -34,6 +34,38 @@ class Account(Base):
             log.info(f"Fetching accounts for ids: {ids}")
             return session.query(Account).filter(Account.id.in_(ids)).all()
     
+    def update(self, db_client:DopBuddyDbClient) -> None:
+        log.info(f"Updating account associated with id: {self.id}")
+        with db_client.get_scoped_session() as session:
+            account = session.query(Account).filter_by(id=self.id).first()
+            if account is None:
+                raise ValueError(f"Unknown account id: {self.id}")
+            
+            if self.account_number:
+                account.account_number = self.account_number
+            
+            if self.account_type:
+                account.account_type = self.account_type
+                if self.account_type == AccountType.JOINT:
+                    if not self.depositor_2:
+                        raise ValueError("Since account type is joint, hence 2nd depositor is must")
+                    
+                    account.depositor_2 = self.depositor_2
+                else:
+                    account.depositor_2 = None
+    
+            if self.depositor_1:
+                account.depositor_1 = self.depositor_1
+            
+            if self.amount:
+                account.amount = self.amount
+            
+            if self.maturity_date:
+                account.maturity_date = self.maturity_date
+            
+            if self.agent:
+                account.agent = self.agent
+    
     def save(self, db_client: DopBuddyDbClient) -> str:
         _id = None
         is_valid, error_message = self._is_valid()
@@ -54,6 +86,9 @@ class Account(Base):
             if not field:
                 return False, f"Please make sure required fields are filled correctly!"
         
+        return self._is_valid_joint_account()
+    
+    def _is_valid_joint_account(self) -> Tuple:
         acc_type = AccountType(self.account_type)
         if acc_type == AccountType.JOINT:
             # depositor_2 is must for a join account.

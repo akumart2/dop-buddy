@@ -49,6 +49,7 @@
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-search-account-tab" data-bs-toggle="tab" data-bs-target="#nav-search-account" type="button" role="tab" aria-controls="nav-search-account" aria-selected="true">Search Accounts</button>
         <button class="nav-link" id="nav-add-account-tab" data-bs-toggle="tab" data-bs-target="#nav-add-account" type="button" role="tab" aria-controls="nav-add-account" aria-selected="false">Add Account</button>
+        <button class="nav-link" id="nav-edit-account-tab" data-bs-toggle="tab" data-bs-target="#nav-edit-account" type="button" role="tab" aria-controls="nav-edit-account" aria-selected="false">Edit Account</button>
       </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -113,6 +114,62 @@
             </div>
             <div class="col-12 d-flex justify-content-end">
               <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-edit-account" role="tabpanel" aria-labelledby="nav-edit-account-tab" tabindex="0">
+        <div class="container">
+          <form class="row g-3" id="editAccount" method="POST" action="{{ url_for('edit') }}">
+            <div>
+              <fieldset class="row md-3">
+                <legend class="col-form-label col-sm-2 pt-0">Account Type</legend>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="inlineRadio1" value="single" checked name="account_type">
+                    <label class="form-check-label" for="inlineRadio1">
+                      Single
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="inlineRadio2" value="joint" name="account_type">
+                    <label class="form-check-label" for="inlineRadio2">
+                      Joint
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-2">
+              <label for="inputAccountId" class="form-label">Account ID</label>
+              <input type="text" class="form-control" id="edit_inputAccountId" name="account_id">
+            </div>
+            <div class="col-md-4">
+              <label for="inputAccountNumber" class="form-label">Account Number</label>
+              <input type="text" class="form-control" id="edit_inputAccountNumber" name="account_number">
+            </div>
+            <div class="col-md-3">
+              <label for="inputDepositor1" class="form-label">Depositor 1</label>
+              <input type="text" class="form-control" id="edit_inputDepositor1" name="depositor_1">
+            </div>
+            <div class="col-md-3">
+              <label for="inputDepositor2" class="form-label">Depositor 2</label>
+              <input type="text" class="form-control" id="edit_inputDepositor2" name="depositor_2">
+            </div>
+            <div class="col-md-4">
+              <label for="inputAmount" class="form-label">Amount</label>
+              <input type="text" class="form-control" id="edit_inputAmount" name="amount">
+            </div>
+            <div class="col-md-4">
+              <label for="inputMaturityDate" class="form-label">Maturity Date</label>
+              <input type="text" class="form-control" id="edit_inputMaturityDate" placeholder="DD/MM/YYYY" name="maturity_date">
+            </div>
+            <div class="col-md-4">
+              <label for="inputAgent" class="form-label">Agent</label>
+              <input type="text" class="form-control" id="edit_inputAgent" placeholder="Ruhi Kumari (4286)" name="agent">
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary">Update</button>
             </div>
           </form>
         </div>
