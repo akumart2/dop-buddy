@@ -54,3 +54,39 @@ def fetch_accounts(account_ids: List[str]) -> List[Account]:
     else:
         raise ValueError("No account id given to search accounts.")
     
+
+def update_account(
+    account_id: str,
+    account_number: str,
+    account_type: AccountType,
+    depositor_1: str, 
+    depositor_2: Optional[str], 
+    amount: int,
+    maturity_date: str,
+    agent: str
+) -> str:
+    """
+    Adds an account in the database with given details.
+    :param account_number: Account number.
+    :param account_type: Either single or joint type of account.
+    :param depositor_1: First account holder name.
+    :param depositor_2: For joint account, second depositor name is must.
+    :param amount: Monthly installment amount.
+    :param maturity_date: Maturity date of the account.
+    :param agent: Details of agent like "name (agent_code)".
+    :return: Return id of the added account.
+    """
+    if account_id:
+        db_client = get_db_client_instance()
+        account = Account(
+            id=account_id,
+            account_number=account_number,
+            account_type=account_type,
+            depositor_1=depositor_1,
+            depositor_2=depositor_2,
+            amount=amount,
+            maturity_date=maturity_date,
+            agent=agent
+        )
+
+        account.update(db_client)
